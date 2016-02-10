@@ -1,0 +1,85 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Phaser - Making your first game, part 1</title>
+    <script src="//cdn.jsdelivr.net/phaser/2.2.2/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game">
+    
+</div>
+
+<script type="text/javascript">
+
+var game = new Phaser.Game(640, 480, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update });
+var player;
+
+function preload() {
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.load.tilemap('map1', 'assets/map1.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('tiles', 'assets/tiles.png');
+    game.load.spritesheet('hac', 'assets/pacman.png', 32, 32);
+}
+
+
+function create() {
+    game.map = game.add.tilemap('map1');
+    game.map.addTilesetImage('tiles', 'tiles');
+    game.layer = game.map.createLayer('Calque de Tile 1');
+    game.map.setCollision(20, true, game.layer);
+    player = game.add.sprite(32*9, 32*8, 'hac');
+    player.animations.add('left', [0, 1, 2, 3], 10, true);
+    player.animations.add('right', [5, 6, 7, 8], 10, true);
+    game.physics.arcade.enable(player);
+}
+
+function update() {
+    cursors = game.input.keyboard.createCursorKeys();
+    //  Reset the players velocity (movement)
+    player.body.velocity.x = 0;
+    player.body.velocity.y = 0;
+
+    if (cursors.left.isDown)
+    {
+        //  Move to the left
+        player.body.velocity.x = -150;
+
+        player.animations.play('left');
+    }
+    else if (cursors.right.isDown)
+    {
+        //  Move to the right
+        player.body.velocity.x = 150;
+
+        player.animations.play('right');
+    }
+    else if(cursors.up.isDown)
+    {
+        player.body.velocity.y = -150;
+
+    }else if(cursors.down.isDown)
+    {
+        player.body.velocity.y = 150;
+
+    }
+    else
+    {
+        //  Stand still
+        player.animations.stop();
+
+        //player.frame = 4;
+    }
+
+}
+
+</script>
+
+</body>
+</html>
